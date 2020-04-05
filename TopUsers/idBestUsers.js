@@ -11,11 +11,16 @@ function idBestUsers() {
      */    
     if (args.length > 1) {
         let clients = args[0].filter((element, index, self) => {return self.indexOf(element) === index;});
-        for (i in clients) {
-            if (args.slice(1).every(el => (el.indexOf(clients[i]) > -1 )))  {
+        for (const client of clients) {
+            if (args.slice(1).every(el => (el.indexOf(client) > -1 )))  {
                 let orders = Array();
-                args.map((el, index) => (orders[index] = el.filter(x => x == clients[i]).length));
-                result.push([orders.reduce((a,b) => a + b), clients[i]]);
+                // args.map((el, index) => (orders[index] = el.filter(x => x == client).length));
+                args.map(el => (orders.push(el.filter(x => x == client).length)));
+                
+                let ordersCount = 0;
+                for (const n of orders) {ordersCount += n;}
+                
+                result.push( Array(ordersCount, client) );
             }
         }
     } else {
@@ -26,6 +31,7 @@ function idBestUsers() {
     if (result.length > 0) {
         /**
          * 2. transform and return result
+         * TODO: get rid of reduce --> it's greedy for resources 
          */
         return result.sort((a,b) => b[0] - a[0]).slice(1).reduce(function(accumulator, current) {
             if (current[0] == accumulator.slice(-1)[0][0]) {
