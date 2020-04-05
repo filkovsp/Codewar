@@ -10,17 +10,14 @@ function idBestUsers() {
      *    hint here:https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
      */    
     if (args.length > 1) {
-        args[0].filter( function(element, index, self) {
-            if (self.indexOf(element) === index && args.slice(1).every(el => (true && (el.indexOf(element)) > -1 )))  {
-                let value = Array();
-                args.map((el, index) => (value[index] = el.filter(x => x == element).length)).reduce((a,b) => a + b);
-                result.push([value.reduce((a,b) => a + b), element]);
-                return true;
-            } else {
-                return false;
+        let clients = args[0].filter((element, index, self) => {return self.indexOf(element) === index;});
+        for (i in clients) {
+            if (args.slice(1).every(el => (el.indexOf(clients[i]) > -1 )))  {
+                let orders = Array();
+                args.map((el, index) => (orders[index] = el.filter(x => x == clients[i]).length));
+                result.push([orders.reduce((a,b) => a + b), clients[i]]);
             }
-        });
-
+        }
     } else {
         return [];
     }
